@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-cicd-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-cicd-demo
+  template:
+    metadata:
+      labels:
+        app: java-cicd-demo
+    spec:
+      containers:
+        - name: java-cicd-demo
+          image: 364046407268.dkr.ecr.ap-south-1.amazonaws.com/java-cicd-demo:v1
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
